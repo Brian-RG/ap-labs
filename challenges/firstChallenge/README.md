@@ -36,21 +36,22 @@ Note that the answer must be a substring, `pwke` is a subsequence and not a subs
 Build Requirements
 ------------------
 ```
-# Build Requirements here
+You must have python3
 ```
 
 
 How to build
 ------------
 ```
-# instructions here
+Python is interpreted, not compiled
 ```
-
 
 How to Run
 ----------
 ```
-# instructions here
+Write the command to run python3 scripts
+python3 homework1.py
+
 ```
 
 
