@@ -1,7 +1,7 @@
 Lab - C Basics
 ==============
-Using basic concepts of C Programming from [C Basics lecture](http://talks.obedmr.com/hello-c-world/00-basics.slide#1),
-create a program that calculates the conversion from Farenheit  to Celsius degrees.
+Using the basic concepts of C Programming from [C Basics lecture](http://talks.obedmr.com/hello-c-world/00-basics.slide#1),
+create a new program that calculates the conversion from Farenheit  to Celsius degrees.
 
 Modify the provided `fahrenheit_celsius.c` file to receive the parameters in the following formats:
 
