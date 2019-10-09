@@ -17,6 +17,15 @@ int errorf(const char *format, ...)
 int panicf(const char *format, ...)
 ```
 
+Steps for building and running:
+-------------------------------
+- You need to have gcc installed.
+- First: gcc -c logger.c -o logger
+- Second: gcc -c testLogger.c -o test
+- Finally: gcc test log -o main
+- If you want to run this code: ./main
+
+
 General instructions
 --------------------
 - Use the `logger.c` file for your implementation.
