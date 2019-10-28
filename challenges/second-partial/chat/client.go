@@ -11,19 +11,30 @@ import (
 	"log"
 	"net"
 	"os"
+	"flag"
 )
 
 //!+
 func main() {
-	conn, err := net.Dial("tcp", "localhost:8000")
+	username:=flag.String("user","Unnamed","your username")
+	servidor:=flag.String("server","localhost:8000","<server>:<port>")
+	flag.Parse()
+	conn, err := net.Dial("tcp",*servidor)
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(-1)
 	}
+	
+	io.WriteString(conn,*username+"\n")
+
 	done := make(chan struct{})
 	go func() {
-		io.Copy(os.Stdout, conn) // NOTE: ignoring errors
+		if _,err:=io.Copy(os.Stdout, conn); err!= nil{ 
+			os.Exit(-1)
+		}
 		log.Println("done")
 		done <- struct{}{} // signal the main goroutine
+
 	}()
 	mustCopy(conn, os.Stdin)
 	conn.Close()
