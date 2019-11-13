@@ -16,8 +16,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"gopl.io/ch5/links"
+	"github.com/todostreaming/gopl.io/ch5/links"
+	"flag"
+	"strconv"
 )
 
 //!+sema
@@ -25,8 +26,14 @@ import (
 // enforce a limit of 20 concurrent requests.
 var tokens = make(chan struct{}, 20)
 
-func crawl(url string) []string {
+type path struct{
+	links []string
+	level int
+}
+
+func crawl(url string, lvl int) path {
 	fmt.Println(url)
+
 	tokens <- struct{}{} // acquire a token
 	list, err := links.Extract(url)
 	<-tokens // release the token
@@ -34,31 +41,50 @@ func crawl(url string) []string {
 	if err != nil {
 		log.Print(err)
 	}
-	return list
+
+	res:=path{links:list,level:lvl+1}
+	return res
 }
 
 //!-sema
 
 //!+
 func main() {
-	worklist := make(chan []string)
+	depth:=flag.Int("depth",1,"the maximum depth to explore")
+	flag.Parse()
+
+	fmt.Println("The max depth is",*depth)
+
+
+
+	worklist := make(chan path)
 	var n int // number of pending sends to worklist
 
 	// Start with the command-line arguments.
+	
+	cur:=1
+	
+	start:=path{links:os.Args[1:], level:cur}
+
 	n++
-	go func() { worklist <- os.Args[1:] }()
+	go func() { worklist <- start }()
 
 	// Crawl the web concurrently.
 	seen := make(map[string]bool)
 	for ; n > 0; n-- {
-		list := <-worklist
-		for _, link := range list {
-			if !seen[link] {
-				seen[link] = true
-				n++
-				go func(link string) {
-					worklist <- crawl(link)
-				}(link)
+		urls := <-worklist
+		if(urls.level<=*depth){
+			fmt.Println("level:",urls.level)
+			for _, link := range urls.links {
+				if link!="-depth="+strconv.Itoa(*depth){
+					if !seen[link] {
+						seen[link] = true
+						n++
+						go func(link string) {
+							worklist <- crawl(link,urls.level)
+						}(link)
+					}	
+				}
 			}
 		}
 	}
